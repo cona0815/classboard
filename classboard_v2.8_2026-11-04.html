@@ -1,4 +1,4 @@
-<!-- 競賽公告螢幕 v2.7 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
+<!-- 競賽公告螢幕 v2.8 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
 <title>競賽公告螢幕</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -319,7 +319,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
   <div class="frow"><span>設定檔</span><button type="button" class="btn" id="expJson">匯出全部設定</button><button type="button" class="btn" id="impJson">匯入設定</button></div>
   <div class="pnote">設定檔包含所有畫面、定時、風格和圖片。在家裡做好，匯出後帶到比賽的電腦匯入即可。</div>
   <div class="frow"><span>重設</span><button type="button" class="btn danger" id="resetAll">載入 11/4 比賽範本</button></div>
-  <div class="ver">v2.7 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
+  <div class="ver">v2.8 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
 </div>
 <div class="pop" id="screens" hidden>
   <h3>畫面管理</h3>
@@ -349,7 +349,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/* 競賽公告螢幕 v2.7 · 2026-11-04 */
+/* 競賽公告螢幕 v2.8 · 2026-11-04 */
 (function(){
 const $=s=>document.querySelector(s);
 const KEY='classboard_v2',IMGKEY='classboard_v2_img';
@@ -444,6 +444,16 @@ const KEEP=['text','schedule','clock','timer','countdown','stopwatch','alarm','i
 S.screens.forEach(sc=>{sc.id=sc.id||uid();sc.widgets=sc.widgets.filter(w=>KEEP.includes(w.type))});
 if(!S.bg)S.bg=S.photo?'photo':'default';S.font=S.font||'auto';S.dfont=S.dfont||'auto';
 S.rotate=S.rotate||{on:false,sec:30};S.jobs=S.jobs||[];
+if(!S.mig27){S.mig27=1;
+  const sc=S.screens.find(x=>x.name==='比賽中');
+  if(sc&&!sc.widgets.some(w=>w.type==='interval')){
+    const tip=sc.widgets.find(w=>w.type==='text'&&/隨時存檔/.test(w.d.text||''));
+    if(tip&&Math.abs(tip.y-.25)<.02&&Math.abs(tip.h-.61)<.02){tip.h=.33;tip.fs=Math.min(tip.fs||1,.75)}
+    const W=mk('interval',.66,.61,.32,.25,{every:30,msg:'記得存檔！',start:'13:00',end:'16:10'});W.z=++S.z;sc.widgets.push(W);
+    setTimeout(()=>toast('已在「比賽中」畫面加上每 30 分鐘「記得存檔！」提醒',null,null,6000),900);
+  }
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+}
 let saveT,imgT;
 function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},250)}
 function saveImgs(){clearTimeout(imgT);imgT=setTimeout(()=>{try{localStorage.setItem(IMGKEY,JSON.stringify(IMG))}catch(e){toast('圖片太多，瀏覽器存不下；這次仍可使用，重新整理後可能消失')}},400)}
