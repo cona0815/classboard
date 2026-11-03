@@ -24,7 +24,7 @@
 
 | 資源 | 用途 | 授權 |
 |---|---|---|
-| [Lucide](https://lucide.dev) 0.460.0 | 工具列圖示 | ISC |
+| [Lucide](https://lucide.dev) 0.460.0 | 工具列圖示 | ISC（源自 Feather 的圖示為 MIT） |
 | [html2canvas](https://html2canvas.hertzen.com) 1.4.1 | 匯出 PNG | MIT |
 | Google Fonts：Noto Sans TC、Noto Serif TC、LXGW WenKai TC、Iansui、Huninn、Bpmf Iansui、Bpmf Huninn、Bpmf Zihi Kai Std、Caveat、Fredoka、Orbitron | 字型 | SIL Open Font License 1.1 |
 
