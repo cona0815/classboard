@@ -1,6 +1,8 @@
 # 競賽公告螢幕 v2.6（2026-11-03）
 
-給學生看的教室公告螢幕，參考 Classroomscreen 設計，單一 HTML 檔，打開就能用。
+給學生看的教室公告螢幕，單一 HTML 檔，打開就能用。
+
+使用方式的靈感來自 Classroomscreen 這類教室螢幕工具，但程式、版面與美術都是自行撰寫，沒有使用 Classroomscreen 的程式碼、圖片或素材。本專案與 Classroomscreen 沒有任何關係，也未獲其授權或贊助。
 
 ## 功能
 - 小工具：文字、時程表、時鐘、計時器、倒數、碼錶、鬧鐘、圖片、畫板，可拖曳、縮放、調字體大小
@@ -16,3 +18,14 @@
 設定存在瀏覽器裡；換電腦請用「風格 → 匯出全部設定 / 匯入設定」。
 
 字型、圖示、PNG 匯出需要網路；沒網路時其他功能照常。
+
+## 第三方資源與授權
+本專案只從 CDN 載入以下資源，沒有把它們的檔案放進 repo：
+
+| 資源 | 用途 | 授權 |
+|---|---|---|
+| [Lucide](https://lucide.dev) 0.460.0 | 工具列圖示 | ISC |
+| [html2canvas](https://html2canvas.hertzen.com) 1.4.1 | 匯出 PNG | MIT |
+| Google Fonts：Noto Sans TC、Noto Serif TC、LXGW WenKai TC、Iansui、Huninn、Bpmf Iansui、Bpmf Huninn、Bpmf Zihi Kai Std、Caveat、Fredoka、Orbitron | 字型 | SIL Open Font License 1.1 |
+
+「Classroomscreen」為其權利人所有之名稱，本文僅用於說明靈感來源。
