@@ -1,4 +1,4 @@
-<!-- 競賽公告螢幕 v3.0 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
+<!-- 競賽公告螢幕 v3.1 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
 <title>競賽公告螢幕</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -326,7 +326,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
   <div class="frow"><span>設定檔</span><button type="button" class="btn" id="expJson">匯出全部設定</button><button type="button" class="btn" id="impJson">匯入設定</button></div>
   <div class="pnote">設定檔包含所有畫面、定時、風格和圖片。在家裡做好，匯出後帶到比賽的電腦匯入即可。</div>
   <div class="frow"><span>重設</span><button type="button" class="btn danger" id="resetAll">載入 11/4 比賽範本</button></div>
-  <div class="ver">v3.0 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
+  <div class="ver">v3.1 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
 </div>
 <div class="pop" id="screens" hidden>
   <h3>畫面管理</h3>
@@ -356,7 +356,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/* 競賽公告螢幕 v3.0 · 2026-11-04 */
+/* 競賽公告螢幕 v3.1 · 2026-11-04 */
 (function(){
 const $=s=>document.querySelector(s);
 const KEY='classboard_v2',IMGKEY='classboard_v2_img';
@@ -608,7 +608,7 @@ interval:{
     if(d.mode==='now'){if(!d.anchor)return null;const k=Math.floor((now-d.anchor)/(d.every*60000))+1;return d.anchor+k*d.every*60000}
     const day=new Date(n);day.setSeconds(0,0);const at=t=>{const[h,m]=String(t||'').split(':').map(Number);const x=new Date(day);x.setHours(h||0,m||0,0,0);return x.getTime()};
     const st=at(d.start||'00:00'),en=d.end?at(d.end):at('23:59')+60000;if(now>=en)return null;
-    if(now<st)return st+d.every*60000<=en?st+d.every*60000:null;
+    if(now<st)return st<=en?st:null;
     const k=Math.floor((now-st)/(d.every*60000))+1,t=st+k*d.every*60000;return t<=en?t:null},
   render(b,W){b.innerHTML=`<div class="ctr"><div class="lbl ev"></div><div class="big tdg nx"></div><div class="ttl ms"></div><div class="lbl rg opt-tall"></div><div class="ctl opt-mid"><button type="button" class="btn go"></button><button type="button" class="btn ts">試一次</button></div></div>`;
     b.querySelector('.go').onclick=()=>T.interval.primary(b,W);
@@ -631,7 +631,7 @@ interval:{
     f.seg('提醒方式',[['glow','小工具發光'],['pop','跳出全螢幕']],()=>d.how||'pop',v=>{d.how=v;setTimeout(()=>rebuild(W))})
      .chk('提醒時響鈴',()=>d.sound,v=>d.sound=v)
      .inp((d.how||'pop')==='glow'?'發光幾秒':'幾秒後自動關閉','number',()=>d.auto,v=>d.auto=clamp(Math.round(+v)||0,0,600),{min:0,max:600})
-     .note(((d.how||'pop')==='glow'?'發光時點一下小工具就會停止。':'自動關閉填 0 代表要按「知道了」才會關。')+'指定時段的話，第一次提醒在開始時間後 '+d.every+' 分鐘。')}
+     .note(((d.how||'pop')==='glow'?'發光時點一下小工具就會停止。':'自動關閉填 0 代表要按「知道了」才會關。')+'指定時段的話，開始時間就提醒第一次，之後每 '+d.every+' 分鐘一次。')}
 },
 alarm:{
   render(b,W){b.innerHTML='<div class="ctr"><div class="lbl">下一個鬧鐘</div><div class="big tdg nt"></div><div class="ttl nl"></div><div class="lbl nd opt-mid"></div><ul class="al-list opt-tall"></ul></div>';b._k=null},
