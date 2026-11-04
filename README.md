@@ -33,3 +33,6 @@
 | Google Fonts：Noto Sans TC、Noto Serif TC、LXGW WenKai TC、Iansui、Huninn、Bpmf Iansui、Bpmf Huninn、Bpmf Zihi Kai Std、Caveat、Fredoka、Orbitron | 字型 | SIL Open Font License 1.1 |
 
 「Classroomscreen」為其權利人所有之名稱，本文僅用於說明靈感來源。
+
+## 交接
+詳見 [HANDOFF_競賽公告螢幕_v3.5_2026-11-04.md](HANDOFF_競賽公告螢幕_v3.5_2026-11-04.md)。
