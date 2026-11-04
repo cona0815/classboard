@@ -1,4 +1,4 @@
-<!-- 競賽公告螢幕 v3.1 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
+<!-- 競賽公告螢幕 v3.2 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
 <title>競賽公告螢幕</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -304,6 +304,11 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 .lightbox img{max-width:97vw;max-height:95vh;object-fit:contain}
 .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#111;color:#fff;padding:10px 16px;border-radius:10px;z-index:9600;font-size:.95rem;max-width:90vw;box-shadow:0 6px 20px rgba(0,0,0,.4);display:flex;gap:12px;align-items:center}
 .toast button{background:#fff;color:#111;border:0;border-radius:6px;padding:4px 10px;cursor:pointer;font-weight:700}
+.ack{position:fixed;inset:0;z-index:9450;display:grid;place-items:center;background:rgba(0,0,0,.35);padding:16px}
+.ackbox{background:var(--card-solid);color:var(--ink);border:2px solid var(--accent);border-radius:16px;padding:22px 28px;max-width:min(520px,92vw);text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:12px;align-items:center}
+.acktime{color:var(--muted);font-size:.95rem}
+.ackmsg{font-family:var(--title-font);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.35;white-space:pre-line;color:var(--accent)}
+.ackbox .btn{font-size:1.15rem;padding:8px 34px}
 .w.glow{animation:wglow 1.1s ease-in-out infinite;z-index:5000!important;cursor:pointer}
 .w.glow .ms{color:var(--hot)!important;transform:scale(1.15)}
 @keyframes wglow{0%,100%{box-shadow:0 0 0 3px var(--accent),0 0 18px 4px var(--accent)}50%{box-shadow:0 0 0 6px var(--accent),0 0 70px 26px var(--accent)}}
@@ -326,7 +331,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
   <div class="frow"><span>設定檔</span><button type="button" class="btn" id="expJson">匯出全部設定</button><button type="button" class="btn" id="impJson">匯入設定</button></div>
   <div class="pnote">設定檔包含所有畫面、定時、風格和圖片。在家裡做好，匯出後帶到比賽的電腦匯入即可。</div>
   <div class="frow"><span>重設</span><button type="button" class="btn danger" id="resetAll">載入 11/4 比賽範本</button></div>
-  <div class="ver">v3.1 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
+  <div class="ver">v3.2 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
 </div>
 <div class="pop" id="screens" hidden>
   <h3>畫面管理</h3>
@@ -350,13 +355,14 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 <div class="ring" id="ring" hidden role="alertdialog" aria-live="assertive">
   <div><div class="rbig" id="ringBig">時間到！</div><div class="rsub" id="ringSub"></div><button type="button" id="ringOff">知道了（Esc）</button></div>
 </div>
+<div class="ack" id="ack" hidden role="dialog" aria-modal="true" aria-labelledby="ackMsg"><div class="ackbox"><div class="acktime" id="ackTime"></div><div class="ackmsg" id="ackMsg"></div><button type="button" class="btn primary" id="ackOk">知道了</button></div></div>
 <div class="lightbox" id="lightbox" hidden><img id="lbImg" alt="放大圖片"></div>
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/* 競賽公告螢幕 v3.1 · 2026-11-04 */
+/* 競賽公告螢幕 v3.2 · 2026-11-04 */
 (function(){
 const $=s=>document.querySelector(s);
 const KEY='classboard_v2',IMGKEY='classboard_v2_img';
@@ -631,7 +637,7 @@ interval:{
     f.seg('提醒方式',[['glow','小工具發光'],['pop','跳出全螢幕']],()=>d.how||'pop',v=>{d.how=v;setTimeout(()=>rebuild(W))})
      .chk('提醒時響鈴',()=>d.sound,v=>d.sound=v)
      .inp((d.how||'pop')==='glow'?'發光幾秒':'幾秒後自動關閉','number',()=>d.auto,v=>d.auto=clamp(Math.round(+v)||0,0,600),{min:0,max:600})
-     .note(((d.how||'pop')==='glow'?'發光時點一下小工具就會停止。':'自動關閉填 0 代表要按「知道了」才會關。')+'指定時段的話，開始時間就提醒第一次，之後每 '+d.every+' 分鐘一次。')}
+     .note(((d.how||'pop')==='glow'?'發光時點一下小工具，會跳出小視窗，按「知道了」就停止發光。':'自動關閉填 0 代表要按「知道了」才會關。')+'指定時段的話，開始時間就提醒第一次，之後每 '+d.every+' 分鐘一次。')}
 },
 alarm:{
   render(b,W){b.innerHTML='<div class="ctr"><div class="lbl">下一個鬧鐘</div><div class="big tdg nt"></div><div class="ttl nl"></div><div class="lbl nd opt-mid"></div><ul class="al-list opt-tall"></ul></div>';b._k=null},
@@ -983,7 +989,14 @@ let noticeT,lastIv='';const GLOW={};
 function fireIv(W,key){const d=W.d;
   if((d.how||'pop')==='glow'){GLOW[W.id]=Date.now()+(d.auto>0?d.auto:600)*1000;T.interval.glowTick(W);if(d.sound&&lastIv!==key)chime();if(key)lastIv=key;return}
   if(!key||lastIv!==key){if(key)lastIv=key;notice(d.msg||'提醒',d.sound,d.auto)}}
-document.addEventListener('pointerdown',e=>{const el=e.target.closest('.w.glow');if(el&&!e.target.closest('.wh,.wr,button')){delete GLOW[el.dataset.id];el.classList.remove('glow')}},true);
+document.addEventListener('click',e=>{const el=e.target.closest('.w.glow');if(!el||e.target.closest('.wh,.wr,button'))return;
+  const W=allW().find(w=>w.id===el.dataset.id);if(!W)return;e.stopPropagation();
+  $('#ackMsg').textContent=W.d.msg||'提醒';const n=new Date();$('#ackTime').textContent=pad(n.getHours())+':'+pad(n.getMinutes())+' 的提醒';
+  $('#ack').dataset.id=W.id;$('#ack').hidden=false;$('#ackOk').focus()},true);
+function ackOk(){const id=$('#ack').dataset.id;$('#ack').hidden=true;if(!id)return;
+  const W=allW().find(w=>w.id===id);const msg=W&&W.d.msg;
+  allW().forEach(w=>{if(w.type==='interval'&&(w.id===id||w.d.msg===msg)){delete GLOW[w.id];const o=ELS[w.id];if(o)o.el.classList.remove('glow')}})}
+$('#ackOk').onclick=ackOk;$('#ack').onclick=e=>{if(e.target.id==='ack')$('#ack').hidden=true};
 function notice(text,sound,auto){ringOff();const r=$('#ring');r.classList.add('calm');$('#ringBig').textContent=text;const n=new Date();$('#ringSub').textContent=pad(n.getHours())+':'+pad(n.getMinutes())+(auto>0?'　（'+auto+' 秒後自動關閉）':'');r.hidden=false;if(sound)chime();clearTimeout(noticeT);if(auto>0)noticeT=setTimeout(()=>{if(r.classList.contains('calm'))ringOff()},auto*1000)}
 function runJob(j){
   if(j.action==='screen'){const i=S.screens.findIndex(x=>x.id===j.screen);if(i>=0)goScr(i)}
@@ -994,6 +1007,8 @@ function runJob(j){
 
 /* ---------- 快捷鍵 ---------- */
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!$('#ack').hidden){ackOk();return}
+  if(e.key==='Enter'&&!$('#ack').hidden){e.preventDefault();ackOk();return}
   if(e.key==='Escape'){ringOff();$('#lightbox').hidden=true;$('#pop').hidden=true;$('#sched').hidden=true;$('#screens').hidden=true;return}
   if(isTyping(e.target)||e.ctrlKey||e.metaKey||e.altKey)return;const k=e.key.toLowerCase();
   if(k==='b')toggleBar();else if(k==='f')toggleFs();
