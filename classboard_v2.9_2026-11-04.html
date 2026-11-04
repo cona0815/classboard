@@ -1,4 +1,4 @@
-<!-- 競賽公告螢幕 v2.8 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
+<!-- 競賽公告螢幕 v2.9 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
 <title>競賽公告螢幕</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -149,7 +149,7 @@ body[data-style="cork"] .w::before{content:"";position:absolute;top:-7px;left:50
 @container (max-height:120px){.opt-mid{display:none!important}}
 
 /* 文字 */
-.tx{flex:1;min-height:0;outline:none;font-family:var(--title-font);font-weight:700;font-size:calc(var(--fs)*clamp(16px,min(40cqh,7cqw),220px));line-height:1.25;white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto;display:grid;align-content:center;cursor:text}
+.tx{scrollbar-width:none;flex:1;min-height:0;outline:none;font-family:var(--title-font);font-weight:700;font-size:calc(var(--fs)*clamp(16px,min(40cqh,7cqw),220px));line-height:1.25;white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto;display:grid;align-content:center;cursor:text}
 /* 時鐘 */
 .clk{font-size:calc(var(--fs)*min(42cqh,21cqw))}
 .clk.s{font-size:calc(var(--fs)*min(40cqh,15cqw))}
@@ -288,7 +288,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 .srow .go{min-width:2.2em}
 .btn:disabled{opacity:.35;cursor:default;filter:none}
 .ring.calm{animation:none;background:var(--card-solid);color:var(--ink)}
-.ring.calm .rbig{color:var(--accent);max-width:90vw;overflow-wrap:anywhere}
+.ring.calm .rbig{color:var(--accent);max-width:90vw;overflow-wrap:anywhere;white-space:pre-line;font-size:clamp(2.6rem,7.5vw,8rem);line-height:1.2}
 
 /* 響鈴、放大、提示 */
 .ring{position:fixed;inset:0;z-index:9500;display:grid;place-items:center;text-align:center;background:var(--hot);color:var(--on-hot);padding:24px;animation:flash .9s steps(2,jump-none) infinite}
@@ -319,7 +319,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
   <div class="frow"><span>設定檔</span><button type="button" class="btn" id="expJson">匯出全部設定</button><button type="button" class="btn" id="impJson">匯入設定</button></div>
   <div class="pnote">設定檔包含所有畫面、定時、風格和圖片。在家裡做好，匯出後帶到比賽的電腦匯入即可。</div>
   <div class="frow"><span>重設</span><button type="button" class="btn danger" id="resetAll">載入 11/4 比賽範本</button></div>
-  <div class="ver">v2.8 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
+  <div class="ver">v2.9 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
 </div>
 <div class="pop" id="screens" hidden>
   <h3>畫面管理</h3>
@@ -349,7 +349,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/* 競賽公告螢幕 v2.8 · 2026-11-04 */
+/* 競賽公告螢幕 v2.9 · 2026-11-04 */
 (function(){
 const $=s=>document.querySelector(s);
 const KEY='classboard_v2',IMGKEY='classboard_v2_img';
@@ -408,7 +408,7 @@ function defaults(){
     ],
     screens:[
       {id:s1,name:'比賽公告',widgets:[
-        mk('text',.02,.03,.62,.16,{text:'臺南市 115 年度國中小 Scratch 暨 AI 程式設計競賽'}),
+        mk('text',.02,.03,.62,.16,{text:'臺南市 115 年度國中小 Scratch 暨 AI 程式設計競賽'},.75),
         mk('clock',.66,.03,.32,.24),
         mk('schedule',.02,.22,.62,.64,{title:'11/4（三）下午 國小組',items:[
           {id:uid(),time:'12:30',text:'選手到電腦教室報到',hot:false},
@@ -418,15 +418,15 @@ function defaults(){
           {id:uid(),time:'',text:'比賽中有問題請舉手，不可交談',hot:true},
           {id:uid(),time:'16:10',text:'比賽結束，停止操作並確認作品已上傳',hot:true},
           {id:uid(),time:'16:50',text:'申訴截止（結束後 40 分鐘內）',hot:false}]},.8),
-        mk('countdown',.66,.3,.32,.3,{time:'13:00',label:'距離比賽開始',done:'比賽開始！'}),
-        mk('text',.66,.63,.32,.23,{text:'一般組：Scratch3-AI 1.6.0 教學版\n扎根組：Scratch3 3.29.1 版',align:'left'},.85)
+        mk('text',.66,.3,.32,.3,{text:'注意事項\n1. 檔案要定時存到隨身碟，以免電腦當機\n　 檔名用時間，例：1300\n2. 程式說明文件要轉成 PDF\n3. 最後上傳時，要多重選擇檔案\n4. 傳檔前請老師再確認',align:'left'},.66),
+        mk('interval',.66,.63,.32,.23,{every:30,msg:'把檔案存到隨身碟！\n檔名用時間，例：1300',start:'13:00',end:'16:10'})
       ]},
       {id:s2,name:'比賽中',widgets:[
         mk('text',.02,.03,.62,.18,{text:'比賽進行中・請安靜作答，有問題請舉手',color:'accent'}),
         mk('clock',.66,.03,.32,.18,{date:false}),
         mk('countdown',.02,.25,.62,.61,{time:'16:10',label:'距離比賽結束',done:'時間到，停止操作！'}),
         mk('text',.66,.25,.32,.33,{text:'記得\n・隨時存檔\n・練習過的上傳流程\n・結束前確認已上傳',align:'left'},.75),
-        mk('interval',.66,.61,.32,.25,{every:30,msg:'記得存檔！',start:'13:00',end:'16:10'})
+        mk('interval',.66,.61,.32,.25,{every:30,msg:'把檔案存到隨身碟！\n檔名用時間，例：1300',start:'13:00',end:'16:10'})
       ]},
       {id:s3,name:'申訴時間',widgets:[
         mk('text',.02,.03,.96,.18,{text:'比賽結束　辛苦了！'}),
@@ -449,9 +449,21 @@ if(!S.mig27){S.mig27=1;
   if(sc&&!sc.widgets.some(w=>w.type==='interval')){
     const tip=sc.widgets.find(w=>w.type==='text'&&/隨時存檔/.test(w.d.text||''));
     if(tip&&Math.abs(tip.y-.25)<.02&&Math.abs(tip.h-.61)<.02){tip.h=.33;tip.fs=Math.min(tip.fs||1,.75)}
-    const W=mk('interval',.66,.61,.32,.25,{every:30,msg:'記得存檔！',start:'13:00',end:'16:10'});W.z=++S.z;sc.widgets.push(W);
+    const W=mk('interval',.66,.61,.32,.25,{every:30,msg:'把檔案存到隨身碟！\n檔名用時間，例：1300',start:'13:00',end:'16:10'});W.z=++S.z;sc.widgets.push(W);
     setTimeout(()=>toast('已在「比賽中」畫面加上每 30 分鐘「記得存檔！」提醒',null,null,6000),900);
   }
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+}
+if(!S.mig28){S.mig28=1;
+  const a=S.screens.find(x=>x.name==='比賽公告');
+  if(a){
+    const cd=a.widgets.find(w=>w.type==='countdown'&&w.d.time==='13:00');
+    if(cd){cd.type='text';cd.fs=.66;cd.d={text:'注意事項\n1. 檔案要定時存到隨身碟，以免電腦當機\n　 檔名用時間，例：1300\n2. 程式說明文件要轉成 PDF\n3. 最後上傳時，要多重選擇檔案\n4. 傳檔前請老師再確認',align:'left',color:'ink'}}
+    const ver=a.widgets.find(w=>w.type==='text'&&/Scratch3-AI/.test(w.d.text||''));
+    if(ver){ver.type='interval';ver.fs=1;ver.d=Object.assign(INIT.interval(),{every:30,msg:'把檔案存到隨身碟！\n檔名用時間，例：1300',start:'13:00',end:'16:10'})}
+    const ttl=a.widgets.find(w=>w.type==='text'&&/程式設計競賽/.test(w.d.text||''));if(ttl&&(ttl.fs||1)>.75)ttl.fs=.75;
+  }
+  S.screens.forEach(sc=>sc.widgets.forEach(w=>{if(w.type==='interval'&&w.d.msg==='記得存檔！')w.d.msg='把檔案存到隨身碟！\n檔名用時間，例：1300'}));
   try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
 }
 let saveT,imgT;
@@ -957,7 +969,7 @@ function drawJobs(){
 $('#jobAdd').onclick=()=>{const n=new Date();n.setMinutes(n.getMinutes()+5);S.jobs.push({id:uid(),on:true,time:pad(n.getHours())+':'+pad(n.getMinutes()),action:'screen',screen:scr().id,text:'',sound:true,fired:''});save();drawJobs();drawBar();icons()};
 $('#rotOn').onchange=e=>{S.rotate.on=e.target.checked;lastRot=Date.now();save()};
 $('#rotSec').onchange=e=>{S.rotate.sec=clamp(+e.target.value||30,5,3600);e.target.value=S.rotate.sec;save()};
-let noticeT;
+let noticeT,lastIv='';
 function notice(text,sound,auto){ringOff();const r=$('#ring');r.classList.add('calm');$('#ringBig').textContent=text;const n=new Date();$('#ringSub').textContent=pad(n.getHours())+':'+pad(n.getMinutes())+(auto>0?'　（'+auto+' 秒後自動關閉）':'');r.hidden=false;if(sound)chime();clearTimeout(noticeT);if(auto>0)noticeT=setTimeout(()=>{if(r.classList.contains('calm'))ringOff()},auto*1000)}
 function runJob(j){
   if(j.action==='screen'){const i=S.screens.findIndex(x=>x.id===j.screen);if(i>=0)goScr(i)}
@@ -984,7 +996,7 @@ function loop(){
     if(W.type==='countdown'&&d.time===hm&&d.fired!==tk){d.fired=tk;save();ring(d.done||'時間到',d.label)}
   }
   S.jobs.forEach(j=>{if(j.on&&j.time===hm&&j.fired!==tk){j.fired=tk;save();runJob(j)}});
-  for(const W of allW()){if(W.type!=='interval'||!W.d.on)continue;const d=W.d,nx=T.interval.next(d,now-1000);if(nx&&nx<=now&&now-nx<5000&&d.fired!==String(nx)){d.fired=String(nx);save();notice(d.msg||'提醒',d.sound,d.auto)}}
+  for(const W of allW()){if(W.type!=='interval'||!W.d.on)continue;const d=W.d,nx=T.interval.next(d,now-1000);if(nx&&nx<=now&&now-nx<5000&&d.fired!==String(nx)){d.fired=String(nx);save();const key=nx+'|'+d.msg;if(lastIv!==key){lastIv=key;notice(d.msg||'提醒',d.sound,d.auto)}}}
   if(S.rotate.on&&S.screens.length>1&&$('#ring').hidden&&!OPEN.size&&$('#pop').hidden&&$('#sched').hidden&&$('#screens').hidden&&now-lastUser>20000&&now-lastRot>S.rotate.sec*1000)goScr(S.cur+1);
   for(const W of scr().widgets){const o=ELS[W.id];if(o&&T[W.type].tick&&!OPEN.has(W.id))T[W.type].tick(o.b,W)}
 }
