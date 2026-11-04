@@ -1,4 +1,4 @@
-<!-- 競賽公告螢幕 v3.2 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
+<!-- 競賽公告螢幕 v3.3 · 2026-11-04 · 單檔 HTML · 教室螢幕工具（原創程式與美術，與 Classroomscreen 無關）：自由拖曳／縮放的小工具、下方工具列、多畫面切換、定時自動執行、三種風格、背景與字型可選（含注音字型）、畫面可新增與管理、匯出匯入、第四種風格「小島」、11/4 比賽範本、間隔提醒 -->
 <title>競賽公告螢幕</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -321,6 +321,9 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 <button type="button" class="btn" id="barShow" hidden>顯示工具列（B）</button>
 
 <div class="pop" id="pop" hidden>
+  <h3>預設設定</h3>
+  <div class="frow"><span>預設</span><button type="button" class="btn primary" id="presetSave">把目前設定存為預設</button><button type="button" class="btn" id="presetLoad">還原成預設</button></div>
+  <div class="pnote" id="presetNote"></div>
   <h3>風格與外觀</h3>
   <div class="frow"><span>風格</span><div class="seg" id="styleSeg"><button type="button" data-s="chalk">黑板</button><button type="button" data-s="cork">軟木板</button><button type="button" data-s="led">計分板</button><button type="button" data-s="isle">小島</button></div></div>
   <div class="frow col"><span>背景</span><div class="bgs" id="bgSeg"></div></div>
@@ -331,7 +334,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
   <div class="frow"><span>設定檔</span><button type="button" class="btn" id="expJson">匯出全部設定</button><button type="button" class="btn" id="impJson">匯入設定</button></div>
   <div class="pnote">設定檔包含所有畫面、定時、風格和圖片。在家裡做好，匯出後帶到比賽的電腦匯入即可。</div>
   <div class="frow"><span>重設</span><button type="button" class="btn danger" id="resetAll">載入 11/4 比賽範本</button></div>
-  <div class="ver">v3.2 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
+  <div class="ver">v3.3 · 2026-11-04　快捷鍵：B 工具列｜F 全螢幕｜← → 換畫面｜空白鍵 啟動選取的工具｜Esc 關閉</div>
 </div>
 <div class="pop" id="screens" hidden>
   <h3>畫面管理</h3>
@@ -350,6 +353,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 </div>
 <input type="file" id="fileIn" accept="image/*" hidden>
 <input type="file" id="bgIn" accept="image/*" hidden>
+<script type="application/json" id="presetData"></script>
 <input type="file" id="jsonIn" accept=".json,application/json" hidden>
 
 <div class="ring" id="ring" hidden role="alertdialog" aria-live="assertive">
@@ -362,7 +366,7 @@ body.cbg .w{background:var(--card-solid);backdrop-filter:none}
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/* 競賽公告螢幕 v3.2 · 2026-11-04 */
+/* 競賽公告螢幕 v3.3 · 2026-11-04 */
 (function(){
 const $=s=>document.querySelector(s);
 const KEY='classboard_v2',IMGKEY='classboard_v2_img';
@@ -451,8 +455,13 @@ function defaults(){
 }
 let S,IMG={};
 try{S=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){S=null}
-if(!S||S.v!==2||!Array.isArray(S.screens)||!S.screens.length)S=defaults();
-try{IMG=JSON.parse(localStorage.getItem(IMGKEY)||'{}')||{}}catch(e){IMG={}}
+const PRESETKEY=KEY+'_preset';
+function readPreset(){let o=null;try{o=JSON.parse(localStorage.getItem(PRESETKEY)||'null')}catch(e){}
+  if(!o){try{const t=(document.getElementById('presetData')||{}).textContent||'';if(t.trim())o=JSON.parse(t);if(o)o.builtin=true}catch(e){o=null}}
+  return o&&o.S&&Array.isArray(o.S.screens)&&o.S.screens.length?o:null}
+let fresh=false;
+if(!S||S.v!==2||!Array.isArray(S.screens)||!S.screens.length){fresh=true;const pr=readPreset();S=pr?JSON.parse(JSON.stringify(pr.S)):defaults();if(pr)IMG=pr.IMG||{}}
+if(!fresh){try{IMG=JSON.parse(localStorage.getItem(IMGKEY)||'{}')||{}}catch(e){IMG={}}}
 const KEEP=['text','schedule','clock','timer','countdown','stopwatch','alarm','interval','image','draw'];
 S.screens.forEach(sc=>{sc.id=sc.id||uid();sc.widgets=sc.widgets.filter(w=>KEEP.includes(w.type))});
 if(!S.bg)S.bg=S.photo?'photo':'default';S.font=S.font||'auto';S.dfont=S.dfont||'auto';
@@ -910,7 +919,7 @@ $('#bar').onclick=e=>{const b=e.target.closest('button');if(!b)return;
   else if(b.id==='scrMgr'){$('#pop').hidden=true;$('#sched').hidden=true;$('#screens').hidden=!$('#screens').hidden;drawScreens()}
   else if(b.id==='scrPlus'){addScreen(S.cur);$('#pop').hidden=true;$('#sched').hidden=true;$('#screens').hidden=false;drawScreens(true)}
   else if(b.id==='scrPrev')goScr(S.cur-1);else if(b.id==='scrNext')goScr(S.cur+1);
-  else if(b.id==='bgTb'){$('#sched').hidden=true;$('#screens').hidden=true;$('#pop').hidden=!$('#pop').hidden;drawLook()}
+  else if(b.id==='bgTb'){$('#sched').hidden=true;$('#screens').hidden=true;$('#pop').hidden=!$('#pop').hidden;drawLook();presetNote()}
   else if(b.id==='schedTb'){$('#pop').hidden=true;$('#screens').hidden=true;$('#sched').hidden=!$('#sched').hidden;drawJobs()}
   else if(b.id==='fsTb')toggleFs();
   else if(b.id==='soundTb'){unlock();chime()}
@@ -933,6 +942,9 @@ const safeName=t=>String(t).replace(/[\\/:*?"<>|\s]+/g,'_').slice(0,40)||'畫面
 $('#expJson').onclick=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
   saveFile('競賽公告螢幕設定_'+stamp()+'.json',new Blob([JSON.stringify({app:'classboard',v:2,ver:'2.3',exported:new Date().toISOString(),S,IMG})],{type:'application/json'}))};
 $('#impJson').onclick=()=>$('#jsonIn').click();
+function presetNote(){const pr=readPreset();$('#presetNote').textContent=pr?(pr.builtin?'目前的預設：內建在網頁裡的設定。':'目前的預設：'+(pr.saved||'')+' 存的設定（只存在這台電腦的瀏覽器）。'):'還沒有存預設。存了以後，按「還原成預設」就會回到這個設定。'}
+$('#presetSave').onclick=e=>armed(e.target,'把目前設定存為預設',()=>{try{const n=new Date();localStorage.setItem(PRESETKEY,JSON.stringify({app:'classboard',v:2,saved:n.getFullYear()+'/'+(n.getMonth()+1)+'/'+n.getDate()+' '+pad(n.getHours())+':'+pad(n.getMinutes()),S,IMG}));toast('已存為預設');presetNote()}catch(err){toast('存不下：圖片太多太大，請刪掉一些圖片再試')}});
+$('#presetLoad').onclick=e=>armed(e.target,'還原成預設',()=>{const pr=readPreset();if(!pr){toast('還沒有存預設');return}S=JSON.parse(JSON.stringify(pr.S));IMG=JSON.parse(JSON.stringify(pr.IMG||{}));OPEN.clear();selId=null;save();saveImgs();applyStyle();goScr(S.cur||0);toast('已還原成預設')});
 $('#jsonIn').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const fr=new FileReader();
   fr.onload=()=>{try{const o=JSON.parse(fr.result);if(o.app!=='classboard'||!o.S||!Array.isArray(o.S.screens))throw 0;
     S=o.S;IMG=o.IMG||{};S.screens.forEach(sc=>{sc.id=sc.id||uid();sc.widgets=sc.widgets.filter(w=>KEEP.includes(w.type))});
